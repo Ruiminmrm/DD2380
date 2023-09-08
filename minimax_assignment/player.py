@@ -67,3 +67,19 @@ class PlayerControllerMinimax(PlayerController):
 
         random_move = random.randrange(5)
         return ACTION_TO_STR[random_move]
+
+    def minimax(self, node, miniPlayer, maxPlayer):
+        state = node.state
+        
+        # depth == 0 or node is a terminal value of node
+        if node.depth == 2 or len(state.fish_position) == 0:
+            return self.heuristic(state)
+        
+        # maxPlayer
+        if state.player: 
+            maxEval = -math.inf
+            children = node-compute_and_get_children()
+            for child in children:
+                self.minimax(child, miniPlayer, maxPlayer)
+                
+

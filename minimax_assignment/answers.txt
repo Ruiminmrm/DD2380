@@ -1,0 +1,6 @@
+Q1 : Describe the possible states, initial state, transition function of the KTH fishing derby game
+    possible state: initial state - before game starts, during the game, game over
+    initial state: player = None, scores for player = {}, cought_fish ={} , hook_position = {}, fish_position = {}, fish_scores = {}
+    transition function: 
+
+Q2 : Describe the terminal states of the KTH fishing derby game
