@@ -4,3 +4,41 @@ Q1 : Describe the possible states, initial state, transition function of the KTH
     transition function: 
 
 Q2 : Describe the terminal states of the KTH fishing derby game
+
+
+
+Q1. Describe the possible states, initial state, transition function of the KTH fishing derby game:
+The state space of the game can be described by all the possible permutations of the positions of the boats, their hooks and all of the fish. The initial state of the game is a random state (within the technical rules). 
+
+Depending on how the problem is interpreted, time can be included as a factor in the state space as well.
+
+The transition function in our case receives a player P and a state s, and decides which move to make. In our case we use a heuristic function to help compute which possible move is most useful to the player.
+
+Q2. Describe the terminal states of the KTH fishing derby game.
+
+The terminal states are all the states when there is no time left, or there are no more fish left in the sea.
+
+Q3. Why is ν(A,s) = Score(Green boat) − Score(Red boat) a good heuristic function for
+the KTH fishing derby (knowing that A plays the green boat and B plays the red boat)?
+
+If we assume that we search through the entire game tree when deciding moves, we will know about all terminal states. With this heuristic, we know which terminal states are suitable to us and are worth pursuing. 
+
+If we assume that we can’t compute the entire game tree, it can still be a good heuristic. Score is what both players try to maximize, so designing a heuristic around predicting those values is appropriate. We can’t “know” how the opponent will act, but we obviously assume he will try to maximize his score and try to optimally achieve that goal. This means we have a decent idea of how the opponent will act using this heuristic.
+
+However, if we can only construct very small game trees, this heuristic will not be good at all. Since the player usually requires many moves before he can achieve any points, a heuristic which only looks at score will usually rate all possible moves as equal, since it cannot see far enough to predict future states where the player scores.
+
+Q4. When does ν best approximate the utility function, and why?
+
+When the opponent (red boat) acts rationally (plays optimally). If the opponent makes an irrational move, the utility function will have made a faulty prediction of the opponent’s actions.
+
+Alternative answer: When the game is close to finished and all final states can be computed. In this case we can accurately compute end states. Assuming a non-idiotic heuristic we should easily be able to know which end states are best.
+
+Q5. Can you provide an example of a state s where ν(A,s) > 0 and B wins in the following
+turn? (Hint: recall that fish from different types yield different scores).
+If B grabs a fish that is worth more score than the lead that A has, B will win in the last round even if the state before is in As favor.
+
+Q6. Will η suffer from the same problem (referred to in Q5) as the evaluation function
+ν? If so, can you provide with an example? (Hint: note how such a heuristic could be
+problematic in the game of chess, as shown in Figure 2.2).
+η can suffer a similar issue to v becuase η does not consider move ordering. In the case of the chess example, a set of two moves that lead to the same state could have different outcomes even though the heuristic does not account for it.
+
