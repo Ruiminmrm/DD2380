@@ -66,55 +66,56 @@ class PlayerControllerMinimax(PlayerController):
         # NOTE: Don't forget to initialize the children of the current node
         #       with its compute_and_get_children() method!
 
-        random_move = random.randrange(5)
-        return ACTION_TO_STR[random_move]
-
-    def minimax(self, node, miniPlayer, maxPlayer):
-        state = node.state
+        children = initial_tree_node.compute_and_get_children()
+        best_score = -math.inf
+        best_move = 0
+        for child in children:
+            score = self.alpha_beta_pruning(child, child.depth, math.inf, -math.inf, 0)
+            if score > best_score :
+                best_score = score
+                best_move = child.move
+        return ACTION_TO_STR[best_move]
         
+
+    def alpha_beta_pruning(self, node, depth, beta, alpha, maxPlayer):
+        state = node.state
+        children = node.compute_and_get_children()
+        # depth = node.depth
         # depth == 0 or node is a terminal value of node
-        if node.depth == 2 or len(state.fish_position) == 0:
+        if depth == 0 or len(children) == 0: 
             return self.heuristic(state)
         
-        # maxPlayer
-        if state.player: 
-            maxEval = -math.inf
-            children = node-compute_and_get_children()
+        # alpha
+        # maxPlayer = state.player
+        if maxPlayer == 0:  
+            value = -math.inf
             for child in children:
-                maxEval = max(maxEval, self.minimax(child, miniPlayer, maxPlayer))
-                if miniPlayer <= maxPlayer: #alpfa_beta_pruning
+                value = max(value, self.alpha_beta_pruning(child, depth - 1, beta, alpha, 1)) 
+                if value > beta: 
                     break
-            return maxEval
-        # minPlay
+                alpha = max(alpha, value)
+            return value
+        # beta
         else: 
-            minEval = math.inf
+            value = math.inf
             children = node.compute_and_get_children()
             for child in children:
-                minEval = min(minEval, self.minimax(child, miniPlayer, maxPlayer))
-                if miniPlayer <= maxPlayer:#alpha_beta_pruning
+                value = min(value, self.alpha_beta_pruning(child, depth - 1, beta, alpha, 0))
+                if value < alpha:
                     break
-            return minEval
+                beta = min(beta, value)
+            return value
 
-def heuristic(self, state):
-    max_score = state.player_scores[0]
-    min_score = state.player_scores[1]
-    heuristic = max_score - min_score # 自己设置的h(x)
+    def heuristic(self, state):
+        heuristic = state.player_scores[0] - state.player_scores[1]
 
-    #min
-    if state.player:
-        heuristic = heuristic + self.closet_fish(state.player, state)
-    #max
-    else:
-        heuristic = heuristic - self.closet_fish(state.player, state)
-    return heuristic
-
-def closest_fish(self, player, state):
-    hook_position = state.hook_positions[player]
-    min_distance = math.inf
-    for fish_position in state.fish_positions.values():
-        min_distance = min(min_distance, self.get_distance(fish_position, hook_position))
-    return min_distance
-    
-def get_distance(self, fish_position, hook_position):
-    distance = math.sqrt((fish_position[0]-hook_position[0])**2 + (fish_position[1]-hook_position[1])**2)
-    return distance
+        hook_position = state.hook_positions[state.player]
+        min_distance = math.inf
+        for fish_position in state.fish_positions.values():
+            distance = math.sqrt((fish_position[0] - hook_position[0])**2 + (fish_position[1] - hook_position[1])**2)
+            min_distance = min(min_distance, distance)
+        if state.player:
+            heuristic = heuristic + min_distance
+        else:
+            heuristic = heuristic - min_distance
+        return heuristic
