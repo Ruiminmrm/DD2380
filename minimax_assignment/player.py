@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import random
+import math
 
 from fishing_game_core.game_tree import Node
 from fishing_game_core.player_utils import PlayerController
@@ -80,6 +81,40 @@ class PlayerControllerMinimax(PlayerController):
             maxEval = -math.inf
             children = node-compute_and_get_children()
             for child in children:
-                self.minimax(child, miniPlayer, maxPlayer)
-                
+                maxEval = max(maxEval, self.minimax(child, miniPlayer, maxPlayer))
+                if miniPlayer <= maxPlayer: #alpfa_beta_pruning
+                    break
+            return maxEval
+        # minPlay
+        else: 
+            minEval = math.inf
+            children = node.compute_and_get_children()
+            for child in children:
+                minEval = min(minEval, self.minimax(child, miniPlayer, maxPlayer))
+                if miniPlayer <= maxPlayer:#alpha_beta_pruning
+                    break
+            return minEval
 
+def heuristic(self, state):
+    max_score = state.player_scores[0]
+    min_score = state.player_scores[1]
+    heuristic = max_score - min_score # 自己设置的h(x)
+
+    #min
+    if state.player:
+        heuristic = heuristic + self.closet_fish(state.player, state)
+    #max
+    else:
+        heuristic = heuristic - self.closet_fish(state.player, state)
+    return heuristic
+
+def closest_fish(self, player, state):
+    hook_position = state.hook_positions[player]
+    min_distance = math.inf
+    for fish_position in state.fish_positions.values():
+        min_distance = min(min_distance, self.get_distance(fish_position, hook_position))
+    return min_distance
+    
+def get_distance(self, fish_position, hook_position):
+    distance = math.sqrt((fish_position[0]-hook_position[0])**2 + (fish_position[1]-hook_position[1])**2)
+    return distance
