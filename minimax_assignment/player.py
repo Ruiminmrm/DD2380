@@ -67,7 +67,7 @@ class PlayerControllerMinimax(PlayerController):
         #       with its compute_and_get_children() method!
 
         children = initial_tree_node.compute_and_get_children()
-        best_move, best_score = max(((child.move, self.alpha_beta_pruning(child, child,depth, math.inf, -math.inf, 0)) for child in children), key = lam)
+        best_move, _ = max(((child.move, self.alpha_beta_pruning(child, child.depth, math.inf, -math.inf, 0)) for child in children), key = lambda x:x[1])
         '''
         best_score = -math.inf
         best_move = 0
