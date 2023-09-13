@@ -67,6 +67,8 @@ class PlayerControllerMinimax(PlayerController):
         #       with its compute_and_get_children() method!
 
         children = initial_tree_node.compute_and_get_children()
+        best_move, best_score = max(((child.move, self.alpha_beta_pruning(child, child,depth, math.inf, -math.inf, 0)) for child in children), key = lam)
+        '''
         best_score = -math.inf
         best_move = 0
         for child in children:
@@ -74,19 +76,18 @@ class PlayerControllerMinimax(PlayerController):
             if score > best_score :
                 best_score = score
                 best_move = child.move
+        '''
         return ACTION_TO_STR[best_move]
         
 
     def alpha_beta_pruning(self, node, depth, beta, alpha, maxPlayer):
         state = node.state
         children = node.compute_and_get_children()
-        # depth = node.depth
         # depth == 0 or node is a terminal value of node
         if depth == 0 or len(children) == 0: 
             return self.heuristic(state)
         
         # alpha
-        # maxPlayer = state.player
         if maxPlayer == 0:  
             value = -math.inf
             for child in children:
