@@ -6,7 +6,6 @@ from fishing_game_core.game_tree import Node
 from fishing_game_core.player_utils import PlayerController
 from fishing_game_core.shared import ACTION_TO_STR
 
-
 class PlayerControllerHuman(PlayerController):
     def player_loop(self):
         """
@@ -29,8 +28,8 @@ def compute_distance(fish, hook):
     y = abs(fish[1] - hook[1])
     x = min(x, 20 - x)
     return x + y
-class PlayerControllerMinimax(PlayerController):
 
+class PlayerControllerMinimax(PlayerController):
     def __init__(self):
         super(PlayerControllerMinimax, self).__init__()
 
@@ -85,11 +84,9 @@ class PlayerControllerMinimax(PlayerController):
         
 
     def alpha_beta_pruning(self, node, depth, beta, alpha, maxPlayer):
-        #state = node.state
         children = node.compute_and_get_children()
         # depth == 0 or node is a terminal value of node
         if depth == 0 or len(children) == 0: 
-            #return self.heuristic(state)
             return self.heuristic(node)
         
         # alpha
@@ -127,5 +124,3 @@ class PlayerControllerMinimax(PlayerController):
                 score = scores[i]
                 final += score / min_distance / 2
         return final + 10 * (node.state.player_scores[0] - node.state.player_scores[1])
-   
-    
