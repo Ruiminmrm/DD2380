@@ -22,6 +22,13 @@ class PlayerControllerHuman(PlayerController):
                 return
 
 def compute_distance(fish, hook):
+    '''
+     1. calculate distance between fish and hook in horizontal 
+     2. calculate distance between fish and hook in vertical 
+     3. choose the minimal distance in the horizontal directoin (x and 20-x)
+     4. 20 - the maximal distance of fish and hook is 20
+     5. return the sum distance in horizontal and veritcal direction
+    '''
     x = abs(fish[0] - hook[0])
     y = abs(fish[1] - hook[1])
     x = min(x, 20 - x)
@@ -79,7 +86,6 @@ class PlayerControllerMinimax(PlayerController):
                 best_move = child.move
         '''
         return ACTION_TO_STR[best_move]
-        
 
     def alpha_beta_pruning(self, node, depth, beta, alpha, maxPlayer):
         children = node.compute_and_get_children()
@@ -94,8 +100,10 @@ class PlayerControllerMinimax(PlayerController):
                 value = max(value, self.alpha_beta_pruning(child, depth - 1, beta, alpha, 1)) 
                 if value > beta: 
                     break
+                # alpha = -math.inf, find the max value between the alpha and value
                 alpha = max(alpha, value)
             return value
+        
         # beta
         else: 
             value = math.inf
@@ -104,6 +112,7 @@ class PlayerControllerMinimax(PlayerController):
                 value = min(value, self.alpha_beta_pruning(child, depth - 1, beta, alpha, 0))
                 if value < alpha:
                     break
+                # beta = math.inf , find the min value between the beta and value
                 beta = min(beta, value)
             return value
         
@@ -114,11 +123,14 @@ class PlayerControllerMinimax(PlayerController):
         hook_positions = node.state.hook_positions
         scores = node.state.fish_scores
         for i in fish_positions:
+            # calculate the distance between the fish and the hook
             distance = compute_distance(fish_positions[i], hook_positions[0])
             if distance == 0:
+                # final = final + fish_score
                 final += node.state.fish_scores[i]
             elif scores[i] > 0 and distance < min_distance:
                 min_distance = distance
                 score = scores[i]
+                # final = (final + scores[i] / min_distance) / 2
                 final += score / min_distance / 2
         return final + 10 * (node.state.player_scores[0] - node.state.player_scores[1])
