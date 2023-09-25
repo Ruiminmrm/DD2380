@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-import random
 import math
-
 from fishing_game_core.game_tree import Node
 from fishing_game_core.player_utils import PlayerController
 from fishing_game_core.shared import ACTION_TO_STR
@@ -85,7 +83,7 @@ class PlayerControllerMinimax(PlayerController):
 
     def alpha_beta_pruning(self, node, depth, beta, alpha, maxPlayer):
         children = node.compute_and_get_children()
-        # depth == 0 or node is a terminal value of node
+        # depth == 0 or node is a terminal value of node when len(children) is 0
         if depth == 0 or len(children) == 0: 
             return self.heuristic(node)
         
