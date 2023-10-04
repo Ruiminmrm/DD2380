@@ -143,7 +143,6 @@ class HMM():
                            
     def log_prob(self, scale):
         return -sum(math.log(scale[t]) for t in range(len(self.observation)))
-  
     
     def baum_welch(self, max_iterations):
         self.convert_string_to_matrix()
