@@ -146,9 +146,8 @@ class HMM():
     
     def baum_welch(self, max_iterations):
         self.convert_string_to_matrix()
-        
         old_log_prob = -math.inf
-        for i in range(max_iterations):
+        for _ in range(max_iterations):
             alpha, scale = self.forward()
             beta = self.backward(scale)
             gamma, di_gamma = self.gamma(alpha, beta)
@@ -164,6 +163,9 @@ class HMM():
             print(" ".join(map(lambda x: f"{x:.6f}", row)))
         print('\n' + str(len(self.B)) + ' ' + str(len(self.B[0])) + ' ')
         for row in self.B:
+            print(" ".join(map(lambda x: f"{x:.6f}", row)))
+        print('\n' + str(len(self.pi)) + ' ' + str(len(self.pi[0])) + ' ')
+        for row in self.pi:
             print(" ".join(map(lambda x: f"{x:.6f}", row)))
         
 if __name__ == '__main__':
