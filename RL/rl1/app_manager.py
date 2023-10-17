@@ -158,10 +158,15 @@ class FishingDerbyRLApp(App, SettingLoader, Communicator, PrintScore1Player):
         self.player.diver = diver
 
     def init_states(self):
+        # 表示网格世界的行和列的细分数。它定义了网格的大小，通常用来表示环境中有多少行和列
         subdivisions = self.space_subdivisions
+        
+        # state2ind 和 ind2state : 2 dict, maping states and their location at the grid
         state2ind = {}
         ind2state = {}
         state = 0
+        
+        # each state has a uniqe number which mapping to their location at the grid 
         for i in range(subdivisions):
             for j in range(subdivisions):
                 state2ind[state] = (i, j)
