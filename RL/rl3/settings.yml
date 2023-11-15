@@ -12,10 +12,10 @@ frames_per_second: 10000
 player_type: "ai_rl"
 
 ## Q learning learning rate
-alpha: 0
+alpha: 0.5
 
 ## Q learning discount rate
-gamma: 0
+gamma: 0.8555
 
 # Disables the graphical engine of the simulator (true by default)
 headless: false
@@ -27,7 +27,7 @@ epsilon_initial: 1
 epsilon_final: 1
 
 ## Annealing timesteps
-annealing_timesteps: 1000
+annealing_timesteps: 1
 
 ## threshold
 threshold: 1e-6

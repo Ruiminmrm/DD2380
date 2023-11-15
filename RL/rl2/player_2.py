@@ -158,6 +158,11 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.1
         # Initialize a numpy array with ns state rows and na state columns with float values from 0.0 to 1.0.
         Q = np.random.uniform(0, 1, (ns, na))
+        # 这就是Q table
+        # Q table： 用于表示每个状态，动作pair的估计值，即采取特定动作的预期累计奖励。
+        # 1. 在初始阶段时采取随即动作，以探索环境并了解更多关于奖励和状态转换的信息。
+        # 2. 同时也是为了避免算法陷入局部最优解（local optimal solution）。如果所有Q值都预设为相同的值，那么在learning过程中就会过于集中于莫一组动作，而忽略别的更好的策略
+        # 3. 用随机初始化，有助于确保算法能够探索不同的动作和策略，以找到更好的策略
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.1
 
         for s in range(ns):
@@ -182,6 +187,12 @@ class PlayerControllerRL(PlayerController, FishesModelling):
         # ADD YOUR CODE SNIPPET BETWEEN EX. 2.3
         # Change the while loop to incorporate a threshold limit, to stop training when the mean difference
         # in the Q table is lower than the threshold
+        # 第一个条件是基于训练的最大迭代次数。只要当前epsilon小于最大的epsilon的值，就会一直循环， 确保不会无限迭代，训练
+        # 第二个条件是基于Q table的变化来控制训练的终止。 diff表示Q表在两次epsilon之间的平均差异（即Q值的变化）
+        # 如果 两次迭代之间的变化 diff 小于或等于threhold，代表着Q值不在变化（converge）， 终止循环，即不用进行更多的训练迭代
+        '''
+        此时的目的是为了控制在何时停下,为了防止无限制的训练,和在Q converge时 stop the loop
+        '''
         while episode <= self.episode_max and diff > self.threshold:
             # ADD YOUR CODE SNIPPET BETWEENEX. 2.3
 
@@ -194,6 +205,9 @@ class PlayerControllerRL(PlayerController, FishesModelling):
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
                 # Chose an action from all possible actions
+                # 为current state选一个action，这个action是有最高Q值的action
+                # 其实就是基于Q table中的信息选一个最佳的action，以便在当前状态下行动。
+                # 选择具有最高Q值的动作意味着有希望获得最大的reward， 从而促进学习strategy，是Q Learning中的exploitation部分
                 action = np.nanargmax(Q[s_current])
                 # ADD YOUR CODE SNIPPET BETWEEN EX 2.1 and 2.2
 
@@ -216,6 +230,11 @@ class PlayerControllerRL(PlayerController, FishesModelling):
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 2.2
                 # Implement the Bellman Update equation to update Q
+                # equation :  Q(s,a) = Q(s,a) + alpha * (reward(s,a) + discount * max(Q(s',a') - Q(s,a))
+                # alpha - learning rate - purpose : Q value will not update too fast, thus maintaing stability
+                # reward - immediate reward of s taking a 
+                # discount - use to get the converge value in the future
+                # max(Q(s', a')) the action which has the highest Q value of the actions that next state gonna take 
                 Q[s_current][action] = Q[s_current][action] + lr*(R + discount*np.nanmax(Q[s_next]) - Q[s_current][action])
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 2.2
 
@@ -230,6 +249,8 @@ class PlayerControllerRL(PlayerController, FishesModelling):
             1. mean 算 mean/average of values in the input array. 如果array 里有NaN, 会被当作regular number算进去, 结果会变NaN
             2. nanmean 会跳过NaN
             '''
+            # diff - 就是上次的Q table与这次Q table的difference
+            # 当diff到达一个足够小时，代表Q converge， 跟上面的while 用的条件里的diff是同一个，只是这里是update
             diff = np.nanmean(np.abs(Q - Q_old))
             # ADD YOUR CODE SNIPPET BETWEEN EX. 2.3
             Q_old[:] = Q

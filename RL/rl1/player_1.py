@@ -282,6 +282,7 @@ class PlayerControllerRandom(PlayerController):
         end_episode = False
         # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
         # Initialize a numpy array with ns state rows and na state columns with zeros
+        # 这里建这个matrix的原因是将游戏界面当作网格，然后将所有的格预设为0
         n = np.zeros((ns, na))
         # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
 
@@ -295,6 +296,7 @@ class PlayerControllerRandom(PlayerController):
 
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2
                 # Chose an action from all possible actions and add to the counter of actions per state
+                # 当action到摸一个格子时，就标记其次数
                 action = np.random.choice(possible_actions)
                 n[steps][action] += 1
                 # ADD YOUR CODE SNIPPET BETWEEN EX. 1.2

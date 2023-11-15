@@ -4,10 +4,10 @@ rewards = [100, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -10, -1]
 
 
 # Q learning learning rate
-alpha = 0.4
+alpha = 0.5
 
 # Q learning discount rate
-gamma = 0.8
+gamma = 0.8555
 
 # Epsilon initial
 epsilon_initial = 1

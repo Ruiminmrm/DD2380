@@ -101,9 +101,13 @@ def epsilon_greedy(Q,
         # Implemenmt the epsilon-greedy algorithm for a constant epsilon value
         # Use epsilon and all input arguments of epsilon_greedy you see fit
         # It is recommended you use the np.random module
+        
+        # 这里就是随机给出一个在0，1之间的数，如果小于epsilon，则explore，大于则exploit
         if np.random.uniform(0,1) < epsilon:
+        # 因为是explore，所以从动作中随机选择一个动作
             action = np.random.choice(all_actions)
         else: 
+        # exploit 从Q table找出Q value 时对应的action
             action = np.nanargmax(Q[state])
         # ADD YOUR CODE SNIPPET BETWEEN EX 4.1
 
@@ -113,8 +117,12 @@ def epsilon_greedy(Q,
         # Use epsilon and all input arguments of epsilon_greedy you see fit
         # use the ScheduleLinear class
         # It is recommended you use the np.random module
-        epsilon = ScheduleLinear(anneal_timesteps, epsilon_final, epsilon_initial)
-        if np.random.uniform(0,1) < epsilon.value(current_total_steps):
+        
+        # 这里是linear annealing中 epsilon的情况
+        # 首先是线性退火的调度，为了逐渐减小epsilon的值，timestep是指epsilon从intial 到 final所要的time step
+        sl = ScheduleLinear(anneal_timesteps, epsilon_final, epsilon_initial)
+        # sl.value(current_total_steps) = epsilon
+        if np.random.uniform(0,1) < sl.value(current_total_steps):
             action = np.random.choice(all_actions)
         else:
             action = np.nanargmax(Q[state])
